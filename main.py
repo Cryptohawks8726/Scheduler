@@ -40,11 +40,22 @@ def assignSchedule():
     i = 0
     for j in range(numOfMatches):
         podNum = len(scoutPods)
-        print(i)
-        print(podNum)
         pod = scoutPods[i%podNum]
-        scoutSchedule.append[pod]
+        scoutSchedule.append(pod)
         i += 1
 
 assignSchedule()
+print('''
+
+
+
+SCOUT PODS:
+''')
+print(scoutPods)
+print('''
+
+
+
+SCOUT SCHEDULE:
+''')
 print(scoutSchedule)
