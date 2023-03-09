@@ -2,7 +2,7 @@ import requests
 import base64
 
 def encoder():
-    sample_string = "amoghkashyap:2b11c702-4168-4a41-83c0-a1f2c597e912"
+    sample_string = "neb12345:151e0d73-a9fa-4b0f-9ae6-c9396a9655e3"
     sample_string_bytes = sample_string.encode("ascii")
 
     base64_bytes = base64.b64encode(sample_string_bytes)
@@ -10,7 +10,11 @@ def encoder():
 
     return(base64_string)
 
-header= {"Authorization" : encoder(), "If-Modified-Since":"2021"}
+encoded = encoder()
 
-r = requests.get("https://frc-api.firstinspires.org/v3.0/:2022", headers=header)
+link = "https://frc-api.firstinspires.org/v3.0/2022/schedule/CHCMP?tournamentLevel=qual"
+
+header = {"Authorization" : "Basic bmViMTIzNDU6MTUxZTBkNzMtYTlmYS00YjBmLTlhZTYtYzkzOTZhOTY1NWUz", "If-Modified-Since":"2021"}
+
+r = requests.get(link, headers=header)
 print(r.content)
