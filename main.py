@@ -3,6 +3,8 @@ import math
 import api
 
 matchSchedule = api.teamsInMatches
+rawSchedule = api.matchList
+
 
 scouts = []
 #2d array (just like match schedule)
@@ -39,6 +41,29 @@ def assignSchedule():
         i += 1
 
 assignSchedule()
+
+def listToString(list):
+    i = 0
+    finalStr = ''
+    for item in list:
+        i += 1
+        finalStr += str(item)
+        if i < len(list):
+            finalStr += ', '
+    return finalStr
+
+def dictToString(dict):
+    i = 0
+    finalStr = ''
+    for k, v in dict.items():
+        i += 1
+        finalStr += str(k)+'-'+str(v)
+        if i < len(dict):
+            finalStr += ', '
+    return finalStr
+
+csvList = []
+
 # maybe print the pods at the beginning with a label (pod 1, pod 2, etc)
 # and then print out the match numbers each followed by the pod number
 # i.e.
@@ -59,7 +84,13 @@ print('''
 
 SCOUT PODS:
 ''')
-print(scoutPods)
+podI = 0
+for scoutPod in scoutPods:
+    podI += 1
+    string = 'Pod '+str(podI)+': '+ listToString(scoutPod)
+
+    csvList.append(string.split(', '))
+
 print('''
 
 
@@ -67,4 +98,28 @@ print('''
 SCOUT SCHEDULE:
 ''')
 # print match number
-print(scoutSchedule)
+
+
+
+podNum = 0 # iteration number
+# for each matchInfo in the schedule
+for match in rawSchedule:
+    teamToScout = {} # final dict
+
+    j = 0 # scout pod iteration
+    # for each teamInfo in the match
+    for team in matchSchedule[podNum]:
+        # gets the current pod we are assigning
+        currentPod = scoutPods[podNum % len(scoutPods)]
+        scout = 'UNASSIGNED' # default
+        if j < len(currentPod):
+            scout = currentPod[j] # gets the current scout out of the scout pod
+        teamToScout[str(team)] = scout
+        j += 1
+    txt = str(match['matchNumber']) + ":, " + dictToString(teamToScout)
+    csvList.append(txt.split(', '))
+    podNum += 1
+
+print(csvList)
+
+

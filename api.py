@@ -30,3 +30,4 @@ for matchInfo in matchList:
         teams.append(teamInfo['teamNumber'])
     teamsInMatches.append(teams)
 
+#print(matchList[0])
