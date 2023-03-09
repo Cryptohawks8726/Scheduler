@@ -1,5 +1,6 @@
 import requests
 import base64
+import json
 
 def encoder():
     sample_string = "neb12345:151e0d73-a9fa-4b0f-9ae6-c9396a9655e3"
@@ -17,4 +18,15 @@ link = "https://frc-api.firstinspires.org/v3.0/2022/schedule/CHCMP?tournamentLev
 header = {"Authorization" : "Basic bmViMTIzNDU6MTUxZTBkNzMtYTlmYS00YjBmLTlhZTYtYzkzOTZhOTY1NWUz", "If-Modified-Since":"2021"}
 
 r = requests.get(link, headers=header)
-print(r.content)
+res = r.content.decode("utf-8")
+
+dict = json.loads(res)
+matchList = dict['Schedule']
+teamsInMatches = []
+for matchInfo in matchList:
+    teamsInfo = matchInfo['teams'] # index 0 is the first match
+    teams = []
+    for teamInfo in teamsInfo:
+        teams.append(teamInfo['teamNumber'])
+    teamsInMatches.append(teams)
+

@@ -1,15 +1,8 @@
 import csv
 import math
+import api
 
-matchSchedule = [
-[8726, 5338, 4099, 612, 254, 111], 
-[8726, 5338, 4099, 612, 254, 111], 
-[8726, 5338, 4099, 612, 254, 111], 
-[8726, 5338, 4099, 612, 254, 111], 
-[8726, 5338, 4099, 612, 254, 111], 
-[8726, 5338, 4099, 612, 254, 111], 
-[8726, 5338, 4099, 612, 254, 111]
-]
+matchSchedule = api.teamsInMatches
 
 scouts = []
 #2d array (just like match schedule)
