@@ -38,6 +38,7 @@ assignScoutPods()
 def assignSchedule():
     numOfMatches = len(matchSchedule)
     i = 0
+    # assign the same pod to say 5 matches in a row
     for j in range(numOfMatches):
         podNum = len(scoutPods)
         pod = scoutPods[i%podNum]
@@ -45,6 +46,20 @@ def assignSchedule():
         i += 1
 
 assignSchedule()
+# maybe print the pods at the beginning with a label (pod 1, pod 2, etc)
+# and then print out the match numbers each followed by the pod number
+# i.e.
+"""
+Pod 1: Amogh, Deven, Abhinav, Nick, Tarun
+Pod 2: ...
+
+Match 1: Pod 1
+Match 2: Pod 1
+Match 3: Pod 2
+...
+Match 35: Pod 3
+"""
+
 print('''
 
 
@@ -58,4 +73,5 @@ print('''
 
 SCOUT SCHEDULE:
 ''')
+# print match number
 print(scoutSchedule)
