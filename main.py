@@ -93,29 +93,36 @@ SCOUT SCHEDULE:
 scoutToRobot = [] # will have each pair of scout, matchNUm-robotNum
 csvList = [] # final list
 
-def assignScouts():
-    podNum = 0 # iteration number
+def assignScouts(scoutingTime):
+    matchNum = 0 # match number
+    currentPodNum = 0 # current pod number
+    timesScouted = 0 # scouting time elapsed
     # for each matchInfo in the schedule
     for match in rawSchedule:
-        j = 0 # scout pod iteration
+        j = 0 # iteration inside scout pod (each scout)
         # for each teamInfo in the match
-        for team in matchSchedule[podNum]:
+        for team in matchSchedule[matchNum]:
             # gets the current pod we are assigning
-            currentPod = scoutPods[podNum % len(scoutPods)]
+            currentPod = scoutPods[currentPodNum % len(scoutPods)]
             scout = 'UNASSIGNED' # default
             if j < len(currentPod):
                 scout = currentPod[j] # gets the current scout out of the scout pod
             
             scoutToRobot.append([scout, str(match['matchNumber'])+'-'+str(team)])
             j += 1
-        podNum += 1
+        matchNum += 1
+        timesScouted += 1
+        if timesScouted >= scoutingTime:
+            currentPodNum += 1
+            timesScouted = 0
     
+    # organize each assigned robot to the scout's name
     for scoutPod in scoutPods:
         for scout in scoutPod:
             scoutInfo = [scout] # will have the scout name and all of their match-robotNum assigned to them
             for nameRobotPair in scoutToRobot:
-                name = nameRobotPair[0]
-                robotInfo = nameRobotPair[1] # the match-robotNum pair
+                name = nameRobotPair[0] # name of the scout
+                robotInfo = nameRobotPair[1] # the matchNum-robotNum pair
                 if name == scout:
                     scoutInfo.append(robotInfo)
             csvList.append(scoutInfo)
@@ -129,8 +136,9 @@ fName = ""
 @click.option('--link', default ='example_attendance_roster.csv',
         help = 'file to read from')
 @click.option('--string', default ='example_output.csv', help = 'file to write to')
+@click.option('--time', default =1, help='time each scout has to watch matches')
 
-def inputParams(link, string):
+def inputParams(link, string, time):
     # input
     print('Reading from: '+link)
     lName = link
@@ -141,7 +149,7 @@ def inputParams(link, string):
                 scouts.append(line)
     
     assignScoutPods()
-    assignScouts()
+    assignScouts(time)
 
     # output
     fName = string
