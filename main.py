@@ -62,8 +62,6 @@ def dictToString(dict):
             finalStr += ', '
     return finalStr
 
-csvList = []
-
 # maybe print the pods at the beginning with a label (pod 1, pod 2, etc)
 # and then print out the match numbers each followed by the pod number
 # i.e.
@@ -76,7 +74,6 @@ Match 2: Pod 1
 Match 3: Pod 2
 ...
 Match 35: Pod 3
-"""
 
 print('''
 
@@ -89,8 +86,6 @@ for scoutPod in scoutPods:
     podI += 1
     string = 'Pod '+str(podI)+': '+ listToString(scoutPod)
 
-    csvList.append(string.split(', '))
-
 print('''
 
 
@@ -99,13 +94,13 @@ SCOUT SCHEDULE:
 ''')
 # print match number
 
+"""
 
+scoutToRobot = [] # will have each pair of scout, matchNUm-robotNum
 
 podNum = 0 # iteration number
 # for each matchInfo in the schedule
 for match in rawSchedule:
-    teamToScout = {} # final dict
-
     j = 0 # scout pod iteration
     # for each teamInfo in the match
     for team in matchSchedule[podNum]:
@@ -114,12 +109,37 @@ for match in rawSchedule:
         scout = 'UNASSIGNED' # default
         if j < len(currentPod):
             scout = currentPod[j] # gets the current scout out of the scout pod
-        teamToScout[str(team)] = scout
+        
+        scoutToRobot.append([scout, str(match['matchNumber'])+'-'+str(team)])
         j += 1
-    txt = str(match['matchNumber']) + ":, " + dictToString(teamToScout)
-    csvList.append(txt.split(', '))
     podNum += 1
 
+csvList = []
+
+for scoutPod in scoutPods:
+    for scout in scoutPod:
+        scoutInfo = [scout] # will have the scout name and all of their match-robotNum assigned to them
+        for nameRobotPair in scoutToRobot:
+            name = nameRobotPair[0]
+            robotInfo = nameRobotPair[1] # the match-robotNum pair
+            if name == scout:
+                scoutInfo.append(robotInfo)
+        csvList.append(scoutInfo)
+
+csvFields = ['name', 'matchNumber-robotNumber']
+
 print(csvList)
+
+# writing to csv file 
+with open("output.csv", 'w', newline='') as csvfile: 
+    # creating a csv writer object 
+    csvwriter = csv.writer(csvfile) 
+   
+    # writing the fields 
+    csvwriter.writerow(csvFields) 
+    # writing the data rows 
+    csvwriter.writerows(csvList)
+
+
 
 
