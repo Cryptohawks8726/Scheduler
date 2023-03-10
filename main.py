@@ -1,21 +1,15 @@
 import csv
 import math
 import api
+import click
 
 matchSchedule = api.teamsInMatches
 rawSchedule = api.matchList
 
-
 scouts = []
 #2d array (just like match schedule)
 scoutPods = []
-scoutSchedule = []
-
-with open("example_attendance_roster.csv", "r") as csv_file:
-    csv_reader = csv.reader(csv_file)
-    for line in csv_reader:
-        if not line[0] == 'id': # will ignore the first row (the headers)
-            scouts.append(line)
+#scoutSchedule = []
 
 def assignScoutPods():
     podNum = math.ceil(len(scouts)/6) #5 (for example)
@@ -28,8 +22,7 @@ def assignScoutPods():
                 pod.append(scouts[scoutNum][1])
                 scoutNum += 1
 
-assignScoutPods()
-
+"""
 def assignSchedule():
     numOfMatches = len(matchSchedule)
     i = 0
@@ -41,6 +34,7 @@ def assignSchedule():
         i += 1
 
 assignSchedule()
+"""
 
 def listToString(list):
     i = 0
@@ -97,49 +91,77 @@ SCOUT SCHEDULE:
 """
 
 scoutToRobot = [] # will have each pair of scout, matchNUm-robotNum
+csvList = [] # final list
 
-podNum = 0 # iteration number
-# for each matchInfo in the schedule
-for match in rawSchedule:
-    j = 0 # scout pod iteration
-    # for each teamInfo in the match
-    for team in matchSchedule[podNum]:
-        # gets the current pod we are assigning
-        currentPod = scoutPods[podNum % len(scoutPods)]
-        scout = 'UNASSIGNED' # default
-        if j < len(currentPod):
-            scout = currentPod[j] # gets the current scout out of the scout pod
-        
-        scoutToRobot.append([scout, str(match['matchNumber'])+'-'+str(team)])
-        j += 1
-    podNum += 1
-
-csvList = []
-
-for scoutPod in scoutPods:
-    for scout in scoutPod:
-        scoutInfo = [scout] # will have the scout name and all of their match-robotNum assigned to them
-        for nameRobotPair in scoutToRobot:
-            name = nameRobotPair[0]
-            robotInfo = nameRobotPair[1] # the match-robotNum pair
-            if name == scout:
-                scoutInfo.append(robotInfo)
-        csvList.append(scoutInfo)
+def assignScouts():
+    podNum = 0 # iteration number
+    # for each matchInfo in the schedule
+    for match in rawSchedule:
+        j = 0 # scout pod iteration
+        # for each teamInfo in the match
+        for team in matchSchedule[podNum]:
+            # gets the current pod we are assigning
+            currentPod = scoutPods[podNum % len(scoutPods)]
+            scout = 'UNASSIGNED' # default
+            if j < len(currentPod):
+                scout = currentPod[j] # gets the current scout out of the scout pod
+            
+            scoutToRobot.append([scout, str(match['matchNumber'])+'-'+str(team)])
+            j += 1
+        podNum += 1
+    
+    for scoutPod in scoutPods:
+        for scout in scoutPod:
+            scoutInfo = [scout] # will have the scout name and all of their match-robotNum assigned to them
+            for nameRobotPair in scoutToRobot:
+                name = nameRobotPair[0]
+                robotInfo = nameRobotPair[1] # the match-robotNum pair
+                if name == scout:
+                    scoutInfo.append(robotInfo)
+            csvList.append(scoutInfo)
 
 csvFields = ['name', 'matchNumber-robotNumber']
 
-print(csvList)
+lName = ""
+fName = ""
 
-# writing to csv file 
-with open("output.csv", 'w', newline='') as csvfile: 
-    # creating a csv writer object 
-    csvwriter = csv.writer(csvfile) 
+@click.command()
+@click.option('--link', default ='example_attendance_roster.csv',
+        help = 'file to read from')
+@click.option('--string', default ='example_output.csv', help = 'file to write to')
+
+def inputParams(link, string):
+    # input
+    print('Reading from: '+link)
+    lName = link
+    with open(lName, "r") as csv_file:
+        csv_reader = csv.reader(csv_file)
+        for line in csv_reader:
+            if not line[0] == 'id': # will ignore the first row (the headers)
+                scouts.append(line)
+    
+    assignScoutPods()
+    assignScouts()
+
+    # output
+    fName = string
+    # writing to csv file 
+    with open(fName, 'w', newline='') as csvfile: 
+        print('Writing to: '+fName)
+        # creating a csv writer object 
+        csvwriter = csv.writer(csvfile) 
+    
+        # writing the fields 
+        csvwriter.writerow(csvFields) 
+        # writing the data rows 
+        csvwriter.writerows(csvList)
+  
+if __name__=="__main__":
+    inputParams()
+
+
    
-    # writing the fields 
-    csvwriter.writerow(csvFields) 
-    # writing the data rows 
-    csvwriter.writerows(csvList)
-
+  
 
 
 
