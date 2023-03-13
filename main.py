@@ -134,7 +134,15 @@ def assignScouts(scoutingTime):
         robotInfo = nameRobotPair[1] # the matchNum-robotNum pair
         if name == "UNASSIGNED":
             unassignedList.append(robotInfo)
-    csvList.append(unassignedList)
+    #csvList.append(unassignedList)
+
+    scoutNum = 0
+    for unasgnRobot in unassignedList:
+        unasgnRobotInfo = unasgnRobot.split("-")
+        unasgnRobotMatchNum = unasgnRobotInfo[0]
+        if not unasgnRobot == "UNASSIGNED": # the first item in the list is not a robot, it is just the name of the list (named "UNASSIGNED")
+            csvList[scoutNum % len(scouts)].append(unasgnRobot)
+            scoutNum += 1
 
 csvFields = ['name', 'matchNumber-robotNumber']
 
