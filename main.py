@@ -126,6 +126,15 @@ def assignScouts(scoutingTime):
                 if name == scout:
                     scoutInfo.append(robotInfo)
             csvList.append(scoutInfo)
+    
+    # for the unassigned robots that need scouts
+    unassignedList = ["UNASSIGNED"] # will have the scout (UNASSIGNED) name and all of their match-robotNum assigned to them
+    for nameRobotPair in scoutToRobot:
+        name = nameRobotPair[0] # name of the scout
+        robotInfo = nameRobotPair[1] # the matchNum-robotNum pair
+        if name == "UNASSIGNED":
+            unassignedList.append(robotInfo)
+    csvList.append(unassignedList)
 
 csvFields = ['name', 'matchNumber-robotNumber']
 
@@ -133,12 +142,11 @@ lName = ""
 fName = ""
 
 @click.command()
-@click.option('--link', default ='example_attendance_roster.csv',
-        help = 'file to read from')
-@click.option('--string', default ='example_output.csv', help = 'file to write to')
-@click.option('--time', default =1, help='time each scout has to watch matches')
+@click.option('--link', default ='example_attendance_roster.csv', help = 'file to read from')
+@click.option('--output', default ='example_output.csv', help = 'file to write to')
+@click.option('--time', default = 1, help='time each scout has to watch matches')
 
-def inputParams(link, string, time):
+def inputParams(link, output, time):
     # input
     print('Reading from: '+link)
     lName = link
@@ -151,11 +159,14 @@ def inputParams(link, string, time):
     assignScoutPods()
     assignScouts(time)
 
+    # calculate break time
+    print('Calculated break time: ' + str(time * (len(scoutPods) - 1) ))
+
     # output
-    fName = string
+    fName = output
     # writing to csv file 
     with open(fName, 'w', newline='') as csvfile: 
-        print('Writing to: '+fName)
+        print('Writing to: ' + fName)
         # creating a csv writer object 
         csvwriter = csv.writer(csvfile) 
     
@@ -166,10 +177,3 @@ def inputParams(link, string, time):
   
 if __name__=="__main__":
     inputParams()
-
-
-   
-  
-
-
-
