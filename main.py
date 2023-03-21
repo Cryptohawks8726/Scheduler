@@ -136,13 +136,37 @@ def assignScouts(scoutingTime):
             unassignedList.append(robotInfo)
     #csvList.append(unassignedList)
 
-    scoutNum = 0
-    for unasgnRobot in unassignedList:
-        unasgnRobotInfo = unasgnRobot.split("-")
-        unasgnRobotMatchNum = unasgnRobotInfo[0]
-        if not unasgnRobot == "UNASSIGNED": # the first item in the list is not a robot, it is just the name of the list (named "UNASSIGNED")
-            csvList[scoutNum % len(scouts)].append(unasgnRobot)
-            scoutNum += 1
+    #scoutNum = 0
+    #for unasgnRobot in unassignedList:
+        #unasgnRobotInfo = unasgnRobot.split("-")
+        #unasgnRobotMatchNum = unasgnRobotInfo[0]
+        #if not unasgnRobot == "UNASSIGNED": # the first item in the list is not a robot, it is just the name of the list (named "UNASSIGNED")
+            #print(csvList[scoutNum % len(scouts)].append(unasgnRobot))
+            #scoutNum += 1
+
+
+def getNextScouts():
+    currentScoutNumber = 0
+    currentPodNumber = 0
+    lastScoutGroup = []
+    gettingScouts = []
+    for scout in scouts:
+        if currentScoutNumber <= 5:
+            lastScoutGroup.append(scout[1])
+            currentScoutNumber += 1
+            if len(gettingScouts[currentScoutNumber]) 
+            #currentPodNumber % len(gettingScouts)
+            #currentPodNumber += 1
+        elif currentScoutNumber > 5:
+            currentScoutNumber = 0
+    
+    gettingScouts.append(lastScoutGroup)
+    
+    return gettingScouts
+
+
+
+
 
 csvFields = ['name', 'matchNumber-robotNumber']
 
@@ -150,7 +174,7 @@ lName = ""
 fName = ""
 
 @click.command()
-@click.option('--link', default ='example_attendance_roster.csv', help = 'file to read from')
+@click.option('--link', default ='attendance.csv', help = 'file to read from')
 @click.option('--output', default ='example_output.csv', help = 'file to write to')
 @click.option('--time', default = 1, help='time each scout has to watch matches')
 
@@ -169,6 +193,7 @@ def inputParams(link, output, time):
 
     # calculate break time
     print('Calculated break time: ' + str(time * (len(scoutPods) - 1) ))
+    print(getNextScouts())
 
     # output
     fName = output
@@ -185,3 +210,4 @@ def inputParams(link, output, time):
   
 if __name__=="__main__":
     inputParams()
+    
