@@ -154,9 +154,9 @@ def getNextScouts():
         if currentScoutNumber <= 5:
             lastScoutGroup.append(scout[1])
             currentScoutNumber += 1
-            '''if len(gettingScouts[currentScoutNumber]):
+            if len(gettingScouts[currentScoutNumber]) 
             #currentPodNumber % len(gettingScouts)
-            #currentPodNumber += 1'''
+            #currentPodNumber += 1
         elif currentScoutNumber > 5:
             currentScoutNumber = 0
     
