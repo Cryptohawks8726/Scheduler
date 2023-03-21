@@ -6,10 +6,8 @@ import tabulate
 
 def getScouts():
     """
-    function description
-    reads scouts from csv file and returns the scouts in a list
-
-    :return list of scouts
+    @description    Reads scouts from csv file and returns the scouts in a list
+    @return     List of scouts
     """
     scoutsList = []
     with open('attendance.csv', "r") as csv_file:
@@ -22,13 +20,10 @@ def getScouts():
 
 def getNextScouts(nextScout, scouts):
     """
-    function description
-    adds the next 6 scouts and the next scout to the scouts list
-    
-    :param nextScout: the scout number it is currently on
-    :param scouts: the scout list
-
-    :return the next 6 scouts (pod) and the next scout
+    @description    Adds the next 6 scouts and the next scout to the scouts list
+    @param nextScout    The scout number it is currently on
+    @param scouts   The scout list
+    @return the next 6 scouts (pod) and the next scout
     """
     scoutsList = []
 
@@ -43,13 +38,10 @@ def getNextScouts(nextScout, scouts):
 
 def getNextMatches(numMatches, nextMatch, matchSchedule):
     """
-    function description
-    gets next # matches based on how long the user wants to make the scouting time
-    
-    :param numMatches: number of matches in a row
-    :param nextMatch: the current match number (iteration) it is on
-
-    :return the next # matches based on user input
+    @description Gets next # matches based on how long the user wants to make the scouting time
+    @param numMatches   Number of matches in a row
+    @param nextMatch    The current match number (iteration) it is on
+    @return the next # matches based on user input
     """
     matches = []
 
@@ -63,10 +55,8 @@ def getNextMatches(numMatches, nextMatch, matchSchedule):
 
 def assignScouts():
     """
-    function description
-    gets next 6 scouts paired with the next # of matches
-
-    :return none, just writes to the csv file
+    @description    gets next 6 scouts paired with the next # of matches
+    @return     none
     """
     matchSchedule = api.teamsInMatches
     scouts = getScouts()
